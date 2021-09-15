@@ -9,10 +9,10 @@ export default function EventItem({ evt }) {
     return (
         <div className={classes.event}>
             <div className={classes.image}>
-                <Image src={ image ? image : '/images/event-default.png' } alt="event image" width={170} height={100} />
+                <Image src={ image ? image.formats.thumbnail.url : '/images/event-default.png' } alt="event image" width={170} height={100} />
             </div>
             <div className={classes.info}>
-                <span>{ date } at { time }</span>
+                <span>{ new Date(date).toLocaleDateString('en-US') } at { time }</span>
                 <h3>{ name ? name : '' }</h3>
             </div>
 
