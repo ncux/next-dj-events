@@ -28,6 +28,10 @@
     margin-bottom: 0;
 }
 
+.showcase h2 {
+    margin-bottom: 1rem;
+}
+
 .showcase * {
     z-index: 20;
 }

@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Header from "../header/header";
+import Navbar from "../navbar/navbar";
 import Footer from "../footer/footer";
 import Showcase from "../showcase/showcase";
 import classes from "./layout.module.css";
@@ -17,7 +17,7 @@ export default function Layout({ title, keywords, description, children }) {
                 <meta name="keywords" content={ keywords } />
             </Head>
 
-            <Header />
+            <Navbar />
 
             { router.pathname === '/' ? <Showcase /> : null }
 

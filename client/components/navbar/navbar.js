@@ -1,7 +1,7 @@
 import Link from "next/link";
-import classes from "./header.module.css";
+import classes from "./navbar.module.css";
 
-export default function Header() {
+export default function Navbar() {
 
     return (
         <header className={classes.header}>
@@ -16,6 +16,11 @@ export default function Header() {
                     <li>
                         <Link href="/events">
                             <a>Events</a>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/events/add">
+                            <a>Add event</a>
                         </Link>
                     </li>
                 </ul>
