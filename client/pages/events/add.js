@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 import Layout from "../../components/layout/layout";
-import { API_URL } from "../../config";
+import { API_URL, httpHeaders } from "../../config";
+import "react-toastify/dist/ReactToastify.css";
 import classes from "../../styles/add.module.css";
 
 export default function AddEventPage() {
@@ -19,16 +22,26 @@ export default function AddEventPage() {
 
     const router = useRouter();
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault();
-        if(values.name && values.venue && values.address && values.date && values.time) {
-            console.log(values);
+        const hasEmptyFields = Object.values(values).some(val => val === '');
+        if(hasEmptyFields) {
+            toast.error('Please fill on all fields!');
+        }
+        try {
+            const { data } = await axios.post(`${API_URL}/events`, JSON.stringify(values), httpHeaders);
+            console.log(data);
+
+            // return router.push(`/events/${data?.slug}`);
+        } catch (e) {
+            toast.error(e.message);
         }
     };
 
     return (
         <Layout title="Add an event">
             <Link href="/">Go back</Link>
+            <ToastContainer />
             <h2>Add Event Page</h2>
             <form onSubmit={ handleSubmit } className={classes.form}>
                 <div className={classes.grid}>
@@ -42,7 +55,7 @@ export default function AddEventPage() {
                     </div>
                     <div>
                         <label>Performers</label>
-                        <input type="text" value={values.performers} onChange={ event => setValues({ ...values, performers: event.target.value }) } />
+                        <input type="text" value={values.performers} required onChange={ event => setValues({ ...values, performers: event.target.value }) } />
                     </div>
                     <div>
                         <label>Address</label>
@@ -59,7 +72,7 @@ export default function AddEventPage() {
                 </div>
                 <div>
                     <label>Description</label>
-                    <textarea type="text" value={values.description} onChange={ event => setValues({ ...values, description: event.target.value }) } ></textarea>
+                    <textarea type="text" value={values.description} required onChange={ event => setValues({ ...values, description: event.target.value }) } ></textarea>
                 </div>
                 <input type="submit" value="Save" className="btn"/>
             </form>
