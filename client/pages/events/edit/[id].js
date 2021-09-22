@@ -1,24 +1,29 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
+import moment from "moment";
 import { toast, ToastContainer } from "react-toastify";
-import Layout from "../../components/layout/layout";
-import { API_URL, httpHeaders } from "../../config";
+import { FaImage } from "react-icons/all";
+import Layout from "../../../components/layout/layout";
+import { API_URL, httpHeaders } from "../../../config";
 import "react-toastify/dist/ReactToastify.css";
-import classes from "../../styles/add.module.css";
+import classes from "../../../styles/add.module.css";
 
-export default function AddEventPage() {
+export default function EditEventPage({ data }) {
 
     const [values, setValues] = useState({
-        name: '',
-        venue: '',
-        performers: '',
-        address: '',
-        date: '',
-        time: '',
-        description: ''
+        name: data?.name,
+        venue: data?.venue,
+        performers: data?.performers,
+        address: data?.address,
+        date: data?.date,
+        time: data?.time,
+        description: data?.description
     });
+
+    const [imagePreview, setImagePreview] = useState(data.image ? data.image.formats.thumbnail.url : null);
 
     const router = useRouter();
 
@@ -29,9 +34,8 @@ export default function AddEventPage() {
             toast.error('Please fill on all fields!');
         }
         try {
-            const { data } = await axios.post(`${API_URL}/events`, JSON.stringify(values), httpHeaders);
+            await axios.put(`${API_URL}/events/${data.id}`, JSON.stringify(values), httpHeaders);
             // console.log(data);
-
             return router.push(`/events/${data?.slug}`);
         } catch (e) {
             toast.error(e.message);
@@ -42,7 +46,7 @@ export default function AddEventPage() {
         <Layout title="Add an event">
             <Link href="/">Go back</Link>
             <ToastContainer />
-            <h2>Add Event Page</h2>
+            <h2>Edit Event </h2>
             <form onSubmit={ handleSubmit } className={classes.form}>
                 <div className={classes.grid}>
                     <div>
@@ -63,7 +67,7 @@ export default function AddEventPage() {
                     </div>
                     <div>
                         <label>Date</label>
-                        <input type="date" value={values.date} required onChange={ event => setValues({ ...values, date: event.target.value }) } />
+                        <input type="date" value={ moment(values.date).format('yyyy-MM-DD') } required onChange={ event => setValues({ ...values, date: event.target.value }) } />
                     </div>
                     <div>
                         <label>Time</label>
@@ -76,6 +80,25 @@ export default function AddEventPage() {
                 </div>
                 <input type="submit" value="Save" className="btn"/>
             </form>
+            <h4>Event Poster</h4>
+            {
+                imagePreview ? (<Image src={ imagePreview } width={170} height={100} />) : (<p>No image uploaded!</p>)
+            }
+            <div>
+                <button className="btn-secondary"><FaImage /> Upload image</button>
+            </div>
         </Layout>
     );
+};
+
+export async function getServerSideProps(context) {
+
+    const { params } = context;
+
+    const { data } = await axios.get(`${API_URL}/events/${params.id}`);
+
+    return {
+        props: { data }
+    };
+
 }
