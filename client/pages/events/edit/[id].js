@@ -5,11 +5,12 @@ import Link from "next/link";
 import axios from "axios";
 import moment from "moment";
 import { toast, ToastContainer } from "react-toastify";
-import { FaImage } from "react-icons/all";
+import { FaImage } from "react-icons/fa";
 import Layout from "../../../components/layout/layout";
 import { API_URL, httpHeaders } from "../../../config";
 import "react-toastify/dist/ReactToastify.css";
 import classes from "../../../styles/add.module.css";
+import Modal from "../../../components/modal/modal";
 
 export default function EditEventPage({ data }) {
 
@@ -24,6 +25,8 @@ export default function EditEventPage({ data }) {
     });
 
     const [imagePreview, setImagePreview] = useState(data.image ? data.image.formats.thumbnail.url : null);
+
+    const [openModal, setOpenModal] = useState(false);
 
     const router = useRouter();
 
@@ -85,8 +88,12 @@ export default function EditEventPage({ data }) {
                 imagePreview ? (<Image src={ imagePreview } width={170} height={100} />) : (<p>No image uploaded!</p>)
             }
             <div>
-                <button className="btn-secondary"><FaImage /> Upload image</button>
+                <button onClick={ () => setOpenModal(true) } className="btn-secondary"><FaImage /> Upload image</button>
             </div>
+
+            <Modal open={ openModal } onClose={ () => setOpenModal(false) }>
+                <div>bitch ass nigga</div>
+            </Modal>
         </Layout>
     );
 };
