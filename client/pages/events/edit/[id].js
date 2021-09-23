@@ -11,6 +11,7 @@ import { API_URL, httpHeaders } from "../../../config";
 import "react-toastify/dist/ReactToastify.css";
 import classes from "../../../styles/add.module.css";
 import Modal from "../../../components/modal/modal";
+import ImageUpload from "../../../components/image-upload/image-upload";
 
 export default function EditEventPage({ data }) {
 
@@ -29,6 +30,16 @@ export default function EditEventPage({ data }) {
     const [openModal, setOpenModal] = useState(false);
 
     const router = useRouter();
+
+    const imageUploaded = async () => {
+        try {
+            const evt = await axios.get(`${API_URL}/events/${data.id}`);
+            setImagePreview(evt.image ? evt.image.formats.thumbnail.url : null);
+            setOpenModal(false);
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -92,7 +103,7 @@ export default function EditEventPage({ data }) {
             </div>
 
             <Modal open={ openModal } onClose={ () => setOpenModal(false) }>
-                <div>bitch ass nigga</div>
+                <ImageUpload id={data.id} imageUploaded={imageUploaded} />
             </Modal>
         </Layout>
     );
