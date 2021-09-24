@@ -6,7 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import Layout from "../../components/layout/layout";
 import styles from "../../styles/event-page.module.css";
-import classes from "../../styles/add.module.css";
 import { API_URL, httpHeaders } from "../../config";
 
 export default function EventPage({ data }) {
