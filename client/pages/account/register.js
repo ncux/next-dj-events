@@ -6,22 +6,25 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import classes from "../../styles/auth-form.module.css";
 import Layout from "../../components/layout/layout";
+import { AuthContext } from "../../context/auth";
 
 export default function RegisterPage() {
+
+    const { error, register } = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [password2, setPassword2] = useState('');
 
-    const register = async e => {
+    const registerUser = async e => {
         e.preventDefault();
         try {
             if(password && password !== password2) {
                 toast.error('The passwords do not match!');
                 return;
             }
-            console.log(username, email, password);
+            await register({ email, username, password });
         } catch (e) {
             toast.error(`${e.message}`);
         }
@@ -32,7 +35,7 @@ export default function RegisterPage() {
             <div className={classes.auth}>
                 <h1><FaUser /> Register</h1>
                 <ToastContainer />
-                <form onSubmit={ register }>
+                <form onSubmit={ registerUser }>
 
                     <div>
                         <label>Username</label>

@@ -1,20 +1,22 @@
 import { FaUser } from "react-icons/fa";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import classes from "../../styles/auth-form.module.css";
 import Layout from "../../components/layout/layout";
+import { AuthContext } from "../../context/auth";
 
 export default function LoginPage() {
+
+    const { error, login } = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const login = async e => {
+    const loginUser = async e => {
         e.preventDefault();
-        console.log(email, password);
+        await login({ email, password });
     };
 
     return (
@@ -22,7 +24,7 @@ export default function LoginPage() {
             <div className={classes.auth}>
                 <h1><FaUser /> Login</h1>
                 <ToastContainer />
-                <form onSubmit={ login }>
+                <form onSubmit={ loginUser }>
                     <div>
                         <label>Email</label>
                         <input type="email" value={ email } onChange={ event => setEmail(event.target.value) }  />
