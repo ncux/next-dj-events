@@ -1,3 +1,4 @@
+import cookie from "cookie";
 import { API_URL } from "../../config";
 
 export default async (req, res) => {
@@ -9,9 +10,12 @@ export default async (req, res) => {
             };
             const response = await fetch(`${API_URL}/auth/local`, options);
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             if(response.ok) {
-                res.status(200).json({ user: data.user });
+                const { jwt, user } = data;
+                const jtwCookie = cookie.serialize('jwt', jwt, { httpOnly: true, secure: process.env.NODE_ENV !== 'development', maxAge: 60*60*24*7, sameSite: 'strict', path: '/' }); // maxAge = 1 week
+                res.setHeader('Set-Cookie', jtwCookie);
+                res.status(200).json({ user });
             } else {
                 res.status(data.statusCode).json({ message: data.message[0].messages[0].message });
             }

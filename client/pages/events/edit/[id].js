@@ -111,7 +111,9 @@ export default function EditEventPage({ data }) {
 
 export async function getServerSideProps(context) {
 
-    const { params } = context;
+    const { params, req } = context;
+
+    console.log(req.headers.cookie);
 
     const { data } = await axios.get(`${API_URL}/events/${params.id}`);
 
