@@ -19,6 +19,12 @@ export default function LoginPage() {
         await login({ email, password });
     };
 
+    useEffect(() => {
+        if(error) {
+            toast.error(error);
+        }
+    }, [error]);
+
     return (
         <Layout title="Events | Login">
             <div className={classes.auth}>

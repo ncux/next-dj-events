@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
-import { API_URL, httpHeaders } from "../config";
+import { CLIENT_SERVER_URL } from "../config";
 
 export const AuthContext = createContext();
 
@@ -18,8 +17,23 @@ export const AuthState = ({ children }) => {
         }
     };
 
-    const login = async ({ email, password }) => {  // send email as "identifier"
-        console.log(email, password);
+    const login = async ({ email, password }) => {
+        try {
+            const options = {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password })
+            };
+            const response = await fetch(`${CLIENT_SERVER_URL}/api/login`, options);
+            const data = await response.json();
+            console.log(data);
+            if(response.ok) {
+                setUser(data?.user);
+            } else {
+                setError(data?.message);
+                setError(null);
+            }
+        } catch (e) {
+            console.log(e.message);
+        }
     };
 
     const checkIsLoggedIn = async () => {
