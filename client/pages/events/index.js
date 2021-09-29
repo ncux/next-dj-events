@@ -36,8 +36,9 @@ export async function getServerSideProps(context) {
 
     // calculate start page
     const start_page = +query.page === 1 ? 0 : (+query.page - 1) * PER_PAGE;
+    const start = +start_page;
 
-    const { data } = await axios.get(`${API_URL}/events?_sort=date:ASC&_limit=${PER_PAGE}&_start=${start_page}`);
+    const { data } = await axios.get(`${API_URL}/events?_sort=date:ASC&_limit=${PER_PAGE}&_start=${start}`);
 
     return {
         props: { data, currentPage: +query.page, totalEvents }
