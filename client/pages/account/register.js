@@ -1,5 +1,5 @@
 import { FaUser } from "react-icons/fa";
-import { useContext, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import Link from "next/link";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -29,6 +29,12 @@ export default function RegisterPage() {
             toast.error(`${e.message}`);
         }
     };
+
+    useEffect(() => {
+        if(error) {
+            toast.error(error);
+        }
+    }, [error]);
 
     return (
         <Layout title="Events | Registration">

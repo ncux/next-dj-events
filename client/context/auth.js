@@ -13,7 +13,19 @@ export const AuthState = ({ children }) => {
 
     const register = async ({ username, email, password }) => {
         try {
-            console.log(username, email, password);
+            const options = {
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, username, password })
+            };
+            const response = await fetch(`${CLIENT_SERVER_URL}/api/register`, options);
+            const data = await response.json();
+            console.log(data);
+            if(response.ok) {
+                await setUser(data?.user);
+                await router.push(`/account/dashboard`);
+            } else {
+                setError(data?.message);
+                setError(null);
+            }
         } catch (e) {
             console.log(e.message);
         }
