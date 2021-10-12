@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import cookie from "cookie";
 import Link from "next/link";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -8,7 +9,7 @@ import { API_URL, httpHeaders } from "../../config";
 import "react-toastify/dist/ReactToastify.css";
 import classes from "../../styles/add.module.css";
 
-export default function AddEventPage() {
+export default function AddEventPage({ jwt }) {
 
     const [values, setValues] = useState({
         name: '',
@@ -29,7 +30,8 @@ export default function AddEventPage() {
             toast.error('Please fill on all fields!');
         }
         try {
-            const { data } = await axios.post(`${API_URL}/events`, JSON.stringify(values), httpHeaders);
+            const httpHeadersWithToken = { ...httpHeaders, Authorization: `Bearer ${jwt}` };
+            const { data } = await axios.post(`${API_URL}/events`, JSON.stringify(values), httpHeadersWithToken);
             // console.log(data);
 
             return router.push(`/events/${data?.slug}`);
@@ -78,4 +80,16 @@ export default function AddEventPage() {
             </form>
         </Layout>
     );
+};
+
+export async function getServerSideProps(context) {
+
+    const { req } = context;
+    const { jwt } = cookie.parse(req.headers.cookie);
+
+    return {
+        props: { jwt }
+    }
+
 }
+
