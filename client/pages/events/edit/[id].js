@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import axios from "axios";
+import cookie from "cookie";
 import moment from "moment";
 import { toast, ToastContainer } from "react-toastify";
 import { FaImage } from "react-icons/fa";
@@ -13,7 +14,7 @@ import classes from "../../../styles/add.module.css";
 import Modal from "../../../components/modal/modal";
 import ImageUpload from "../../../components/image-upload/image-upload";
 
-export default function EditEventPage({ data }) {
+export default function EditEventPage({ data, jwt }) {
 
     const [values, setValues] = useState({
         name: data?.name,
@@ -48,7 +49,8 @@ export default function EditEventPage({ data }) {
             toast.error('Please fill on all fields!');
         }
         try {
-            await axios.put(`${API_URL}/events/${data.id}`, JSON.stringify(values), httpHeaders);
+            const httpHeadersWithToken = { ...httpHeaders, Authorization: `Bearer ${jwt}` };
+            await axios.put(`${API_URL}/events/${data.id}`, JSON.stringify(values), httpHeadersWithToken);
             // console.log(data);
             return router.push(`/events/${data?.slug}`);
         } catch (e) {
@@ -103,7 +105,7 @@ export default function EditEventPage({ data }) {
             </div>
 
             <Modal open={ openModal } onClose={ () => setOpenModal(false) }>
-                <ImageUpload id={data.id} imageUploaded={imageUploaded} />
+                <ImageUpload id={data.id} imageUploaded={imageUploaded} jwt={ jwt } />
             </Modal>
         </Layout>
     );
@@ -113,12 +115,12 @@ export async function getServerSideProps(context) {
 
     const { params, req } = context;
 
-    console.log(req.headers.cookie);
+    const { jwt } = cookie.parse(req.headers.cookie);
 
     const { data } = await axios.get(`${API_URL}/events/${params.id}`);
 
     return {
-        props: { data }
+        props: { data, jwt }
     };
 
 }

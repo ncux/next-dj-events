@@ -12,28 +12,29 @@ export default function EventPage({ data }) {
 
     const router = useRouter();
 
-    const deleteEvent = async () => {
-        if(confirm('Are you sure yo want to delete the event?')) {
-            try {
-                await axios.delete(`${API_URL}/events/${data.id}`, httpHeaders);
-                return router.push(`/events`);
-            } catch (e) {
-                toast.error(e.message);
-            }
-        }
-    };
+    // const deleteEvent = async () => {
+    //     if(confirm('Are you sure yo want to delete the event?')) {
+    //         try {
+    //             await axios.delete(`${API_URL}/events/${data.id}`, httpHeaders);
+    //             return router.push(`/events`);
+    //         } catch (e) {
+    //             toast.error(e.message);
+    //         }
+    //     }
+    // };
 
     return (
         <Layout title="">
             <div className={styles.event}>
-                <div className={styles.controls}>
-                    <Link href={`/events/edit/${data.id}`}>
-                        <a><FaPencilAlt /> Edit</a>
-                    </Link>
-                    <a onClick={ deleteEvent } className={styles.delete}>
-                        <FaTimes /> Delete
-                    </a>
-                </div>
+
+                {/*<div className={styles.controls}>*/}
+                {/*    <Link href={`/events/edit/${data.id}`}>*/}
+                {/*        <a><FaPencilAlt /> Edit</a>*/}
+                {/*    </Link>*/}
+                {/*    <a onClick={ deleteEvent } className={styles.delete}>*/}
+                {/*        <FaTimes /> Delete*/}
+                {/*    </a>*/}
+                {/*</div>*/}
 
                 <span>{ new Date(data.date).toLocaleDateString('en-US') } at { data.time }</span>
                 <h1>{ data.name }</h1>

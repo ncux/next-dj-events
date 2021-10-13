@@ -3,7 +3,7 @@ import axios from "axios";
 import { API_URL, httpHeaders } from "../../config";
 import classes from "../../styles/add.module.css";
 
-export default function ImageUpload({ id, imageUploaded }) {
+export default function ImageUpload({ id, imageUploaded, jwt }) {
 
     const [image, setImage] = useState('');
 
@@ -15,7 +15,8 @@ export default function ImageUpload({ id, imageUploaded }) {
             formData.append('ref', 'events');
             formData.append('refId', id);
             formData.append('field', 'image');
-            await axios.post(`${API_URL}/upload`, formData, httpHeaders);
+            const httpHeadersWithToken = { ...httpHeaders, Authorization: `Bearer ${jwt}` };
+            await axios.post(`${API_URL}/upload`, formData, httpHeadersWithToken);
             imageUploaded();
         } catch (e) {
             console.log(e);

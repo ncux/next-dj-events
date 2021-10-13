@@ -1,13 +1,26 @@
 import cookie from "cookie";
 import Layout from "../../components/layout/layout";
-import { API_URL } from "../../config";
+import {API_URL, httpHeaders} from "../../config";
 import classes from "../../styles/dashboard.module.css";
 import DashboardEvent from "../../components/dashboard-event/dashboard-event";
+import axios from "axios";
+import { useRouter } from "next/router";
+import {toast} from "react-toastify";
 
-export default function Dashboard({ events }) {
+export default function Dashboard({ events, jwt }) {
 
-    const deleteEvent = async (id) => {
+    const router = useRouter();
 
+    const deleteEvent = async () => {
+        if(confirm('Are you sure yo want to delete the event?')) {
+            try {
+                const httpHeadersWithToken = { ...httpHeaders, Authorization: `Bearer ${jwt}` };
+                await axios.delete(`${API_URL}/events/${data.id}`, httpHeadersWithToken);
+                return router.reload();  // stay on the dashboard
+            } catch (e) {
+                toast.error(e.message);
+            }
+        }
     };
 
     return (
